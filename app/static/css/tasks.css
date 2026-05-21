@@ -1,0 +1,23 @@
+
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #000;
+}
+
+.task-table thead {
+    background-color: #d4d4d4;
+    text-align: left;
+}
+
+.task-table th,
+.task-table td,
+.task-table tr {
+    border: 1px solid #000;
+}
+
+.task-table .task-element {
+    padding: 8px;
+    text-align: left;
+}

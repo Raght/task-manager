@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Tasks - Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tasks.css')}}">
+{% endblock %}
+
+{% block content %}
+    <h2>Tasks</h2>
+    
+    {% if tasks %}
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr class="task-element">
+                <td>{{ task.id }}</td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No tasks found. Start by creating a new task!</p>
+    {% endif %}
+
+{% endblock %}

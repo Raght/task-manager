@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/flash-msg.css') }}">
+        {% block head %}
+        <title>Home - Task Manager</title>
+        {% endblock %}
+    </head>
+    <body>
+        <div class="navbar">
+            <div id="logo">Task Manager</div>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('task.tasks') }}">Tasks</a>
+            <a href="{{ url_for('projects') }}">Projects</a>
+            <div id="profile">
+                {% if session['logged_in'] %}
+                    <a href="{{ url_for('auth.profile') }}">{{ session['name'] }}</a>
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Login</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="content">
+            {% with messages = get_flashed_messages(True) %}
+                {% if messages %}
+                    {% for cat, msg in messages %}
+                        <div class="flash-msg {{cat}}">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </body>
+</html>

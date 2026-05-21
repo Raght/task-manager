@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Profile - Task Manager</title>
+{% endblock %}
+
+{% block content %}
+    <h2>Profile</h2>
+    <p>Logged in as <strong>{{ session['name'] }}</strong>.</p>
+    <p>Email: {{ session['email'] }}</p>
+
+    <hr>
+    <a href="{{ url_for('auth.logout') }}">Logout</a>
+{% endblock %}
