@@ -1,0 +1,37 @@
+.task-form {
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.task-form label {
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.task-form input,
+.task-form textarea,
+.task-form select {
+    padding: 8px;
+    border: 1px solid #999;
+}
+
+.task-form button {
+    margin-top: 1rem;
+    padding: 10px 20px;
+    align-self: flex-start;
+    cursor: pointer;
+}
+
+.cancel-link {
+    margin-left: 1rem;
+}
+
+.task-readonly p {
+    margin: 0.5rem 0;
+}
+
+.back-link {
+    margin-top: 1.5rem;
+}

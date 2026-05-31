@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>New Task - {{ project.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/task.css')}}">
+{% endblock %}
+
+{% block content %}
+<h2>Add Task to &ldquo;{{ project.name }}&rdquo;</h2>
+
+<form class="task-form" method="post" action="{{ url_for('project.new_task', id=project.id) }}">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4"></textarea>
+
+    <label for="deadline">Deadline</label>
+    <input type="date" id="deadline" name="deadline">
+
+    <label for="priority">Priority</label>
+    <select id="priority" name="priority">
+        {% for p in priorities %}
+        <option value="{{ p.name }}">{{ p.name.replace('_', ' ') }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="status">Status</label>
+    <select id="status" name="status">
+        {% for s in statuses %}
+        <option value="{{ s.name }}">{{ s.name.replace('_', ' ') }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Create</button>
+    <a class="cancel-link" href="{{ url_for('project.project', id=project.id) }}">Cancel</a>
+</form>
+{% endblock %}

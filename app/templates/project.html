@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>{{ project.name }} - Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/project.css')}}">
+{% endblock %}
+
+{% block content %}
+
+<div class="project-header">
+    <h1>&ldquo;{{ project.name }}&rdquo;</h1>
+    <span class="btn-edit">Edit</span>
+</div>
+
+<div class="project-tabs">
+<div id="tasks-tab"></div>
+<div id="team-tab"></div>
+
+<nav class="tab-nav">
+    <a href="#tasks-tab">Tasks</a>
+    <a href="#team-tab">Team</a>
+</nav>
+
+<div class="tab tasks-tab">
+    <div class="tab-toolbar">
+        <a class="btn-add" href="{{ url_for('project.new_task', id=project.id) }}">Add Task</a>
+        <div class="sort-bar">
+            {% for key in sorts %}
+            {% if sort == key %}
+                {% set link_order = 'desc' if order == 'asc' else 'asc' %}
+            {% else %}
+                {% set link_order = 'asc' %}
+            {% endif %}
+            <a href="{{ url_for('project.project', id=project.id, sort=key, order=link_order) }}#tasks-tab"
+               class="{% if sort == key %}active{% endif %}">
+                {% if key == 'id' %}ID{% elif key == 'due' %}Due{% elif key == 'priority' %}Priority{% else %}Status{% endif %}
+                {% if sort == key %}
+                    {% if order == 'asc' %}&uarr;{% else %}&darr;{% endif %}
+                {% endif %}
+            </a>
+            {% if not loop.last %}<span class="sort-sep">|</span>{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if tasks %}
+        <div class="item-list">
+            {% for task in tasks %}
+            <a class="item-row task-row" href="{{ url_for('task.task', id=task.id) }}">
+                <span class="item-id">#{{ task.id }}</span>
+                <span class="item-main">{{ task.name }}</span>
+                <span class="item-meta">
+                    {% if task.deadline %}Due: {{ task.deadline.strftime('%d.%m.%Y') }}{% else %}Due: —{% endif %}
+                </span>
+                <span class="item-meta">
+                    Priority: {% if task.priority %}{{ task.priority.name.replace('_', ' ') }}{% else %}—{% endif %}
+                </span>
+                <span class="item-meta">
+                    Status: {% if task.status %}{{ task.status.name.replace('_', ' ') }}{% else %}—{% endif %}
+                </span>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-msg">No tasks in this project yet.</p>
+    {% endif %}
+</div>
+
+<div class="tab team-tab">
+    {% if members %}
+        <div class="item-list">
+            {% for member in members %}
+            <a class="item-row member-row" href="{{ url_for('auth.profile', user_id=member.id) }}">
+                <span class="item-id">#{{ member.id }}</span>
+                <span class="item-main">{{ member.name }} | {{ member.email }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-msg">No team members for this project.</p>
+    {% endif %}
+</div>
+</div>
+
+{% endblock %}

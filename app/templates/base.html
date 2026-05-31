@@ -13,10 +13,10 @@
             <div id="logo">Task Manager</div>
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('task.tasks') }}">Tasks</a>
-            <a href="{{ url_for('projects') }}">Projects</a>
+            <a href="{{ url_for('project.projects') }}">Projects</a>
             <div id="profile">
                 {% if session['logged_in'] %}
-                    <a href="{{ url_for('auth.profile') }}">{{ session['name'] }}</a>
+                    <a href="{{ url_for('auth.profile', user_id=current_user.id) }}">{{ session['name'] }}</a>
                     <a href="{{ url_for('auth.logout') }}">Logout</a>
                 {% else %}
                     <a href="{{ url_for('auth.login') }}">Login</a>

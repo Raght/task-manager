@@ -1,0 +1,15 @@
+.profile-card {
+    max-width: 400px;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.profile-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #3b7de0;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}

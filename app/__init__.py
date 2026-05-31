@@ -8,6 +8,7 @@ from .model.Tasks import Task
 
 from .routes.auth.auth import auth_bp
 from .routes.tasks.tasks import task_bp
+from .routes.projects.projects import project_bp
 
 
 def create_app():
@@ -28,7 +29,8 @@ def create_app():
         
     app.register_blueprint(auth_bp, url_prefix='')
     app.register_blueprint(task_bp, url_prefix='/tasks')
-    
+    app.register_blueprint(project_bp, url_prefix='/projects')
+
 
     @app.route('/')
     def index():
@@ -38,9 +40,5 @@ def create_app():
     def not_found(e):
         return render_template('404.html')
 
-    
-    @app.route('/projects')
-    def projects():
-        return 'this will be the projects page'
-    
+        
     return app

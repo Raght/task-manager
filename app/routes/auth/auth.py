@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 from ...model.Users import Users
 from ...extensions import db, login_manager
+from ...services.UserService import UserService
 
 auth_bp = Blueprint('auth', __name__, static_folder='../../static', template_folder='../../templates')
 login_manager.login_view = 'auth.login'
@@ -31,10 +32,10 @@ def register():
         email = request.form.get('email')
         
         if Users.query.filter_by(name=username).first():
-            flash('Username already takes', category='error')
+            flash('Username already taken', category='error')
             return render_template('register.html')
         if Users.query.filter_by(email=email).first():
-            flash('Email already takes', category='error')
+            flash('Email already taken', category='error')
             return render_template('register.html')
 
         password_hash = generate_password_hash(password, method='pbkdf2:sha256')
@@ -64,7 +65,7 @@ def login():
             login_user(user)
             session_login()
 
-            flash('Login successful.', category='success')
+            flash('You have successfully logged in.', category='success')
             return redirect(url_for('index'))
         else:
             flash('Invalid username or password.', category='error')
@@ -74,10 +75,22 @@ def login():
 
 
 @auth_bp.route('/profile')
-@login_required
-def profile():
-    print(current_user)
-    return render_template('profile.html')
+@auth_bp.route('/profile/<int:user_id>')
+def profile(user_id=None):
+    if user_id is None:
+        if not current_user.is_authenticated:
+            flash('Select a user profile or log in.', category='error')
+            return redirect(url_for('auth.login'))
+        user_id = current_user.id
+
+    try:
+        user = UserService.get_user(user_id)
+    except ValueError as e:
+        flash(str(e), category='error')
+        return redirect(url_for('index'))
+
+    is_own_profile = current_user.is_authenticated and current_user.id == user.id
+    return render_template('profile.html', user=user, is_own_profile=is_own_profile)
 
 
 @auth_bp.route('/logout')
@@ -85,4 +98,5 @@ def profile():
 def logout():
     logout_user()
     session_logout()
+    flash('You have successfully logged out.', category='success')
     return redirect(url_for('index'))

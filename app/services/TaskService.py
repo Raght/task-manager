@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from ..extensions import db
 from ..model.Tasks import Task
 from ..model.Users import Users
@@ -167,3 +169,29 @@ class TaskService():
     @staticmethod
     def get_tasks_assigned_to_user(user_id):
         return Task.query.filter_by(assignedTo=user_id).all()
+
+    @staticmethod
+    def get_all_statuses():
+        return TaskStatus.query.order_by(TaskStatus.id).all()
+
+    @staticmethod
+    def get_all_priorities():
+        return TaskPriority.query.order_by(TaskPriority.id).all()
+
+    @staticmethod
+    def parse_deadline(value):
+        if not value:
+            return None
+        return datetime.strptime(value, '%Y-%m-%d')
+
+    @staticmethod
+    def build_update_data(form_data):
+        data = {
+            'name': form_data.get('name'),
+            'description': form_data.get('description'),
+            'status': form_data.get('status'),
+            'priority': form_data.get('priority'),
+        }
+        if 'deadline' in form_data:
+            data['deadline'] = TaskService.parse_deadline(form_data.get('deadline'))
+        return data

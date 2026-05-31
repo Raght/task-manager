@@ -1,28 +1,16 @@
-from ..extensions import db
-from ..model.Users import Users
+from ..model.Project import Project
+
 
 class TeamService:
     @staticmethod
-    def get_all():
-        return Users.query.all()
-    
-    @staticmethod
-    def get_team(team_id):
-        team = Users.query.get(team_id)
-        if team is None:
-            raise ValueError(f"Team with id {team_id} not found")  
-        return team
-    
-    @staticmethod
-    def add_team():
-        pass
+    def get_project_members(project_id):
+        project = Project.query.get(project_id)
+        if project is None:
+            raise ValueError(f"Project with id {project_id} not found")
 
-    @staticmethod
-    def update_team():
-        pass
+        members = {}
+        for team in project.teams:
+            for user in team.users:
+                members[user.id] = user
 
-    @staticmethod
-    def remove_team():
-        pass
-
-    ...
+        return sorted(members.values(), key=lambda user: user.id)

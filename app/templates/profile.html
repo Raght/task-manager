@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <title>Profile - Task Manager</title>
+    <title>{{ user.name }} - Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css')}}">
 {% endblock %}
 
 {% block content %}
+<div class="profile-card">
     <h2>Profile</h2>
-    <p>Logged in as <strong>{{ session['name'] }}</strong>.</p>
-    <p>Email: {{ session['email'] }}</p>
+    <p>
+        <span><strong>Name:</strong> {{ user.name }}</span> 
+        {% if is_own_profile %}<span class="profile-badge"> You</span>{% endif %}
+    </p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Member since:</strong> {{ user.createdAt.strftime('%d.%m.%Y') }}</p>
 
-    <hr>
-    <a href="{{ url_for('auth.logout') }}">Logout</a>
+    {% if is_own_profile %}
+        <hr>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    {% endif %}
+</div>
 {% endblock %}

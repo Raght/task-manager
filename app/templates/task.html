@@ -1,3 +1,58 @@
-hello
+{% extends 'base.html' %}
 
-{{task}}
+{% block head %}
+    <title>Task #{{ task.id }} - Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/task.css')}}">
+{% endblock %}
+
+{% block content %}
+<h2>Task #{{ task.id }}</h2>
+
+{% if current_user.is_authenticated %}
+<form class="task-form" method="post" action="{{ url_for('task.task', id=task.id) }}">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" value="{{ task.name }}" required>
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4">{{ task.description or '' }}</textarea>
+
+    <label for="deadline">Deadline</label>
+    <input type="date" id="deadline" name="deadline"
+           value="{% if task.deadline %}{{ task.deadline.strftime('%Y-%m-%d') }}{% endif %}">
+
+    <label for="priority">Priority</label>
+    <select id="priority" name="priority">
+        {% for p in priorities %}
+        <option value="{{ p.name }}" {% if task.priority and task.priority.id == p.id %}selected{% endif %}>
+            {{ p.name.replace('_', ' ') }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="status">Status</label>
+    <select id="status" name="status">
+        {% for s in statuses %}
+        <option value="{{ s.name }}" {% if task.status and task.status.id == s.id %}selected{% endif %}>
+            {{ s.name.replace('_', ' ') }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Save</button>
+</form>
+{% else %}
+<div class="task-readonly">
+    <p><strong>Name:</strong> {{ task.name }}</p>
+    <p><strong>Description:</strong> {{ task.description or '—' }}</p>
+    <p><strong>Deadline:</strong> {% if task.deadline %}{{ task.deadline.strftime('%d.%m.%Y') }}{% else %}—{% endif %}</p>
+    <p><strong>Priority:</strong> {% if task.priority %}{{ task.priority.name.replace('_', ' ') }}{% else %}—{% endif %}</p>
+    <p><strong>Status:</strong> {% if task.status %}{{ task.status.name.replace('_', ' ') }}{% else %}—{% endif %}</p>
+    <p><a href="{{ url_for('auth.login') }}">Log in</a> to edit this task.</p>
+</div>
+{% endif %}
+
+{% if task.projectID %}
+<p class="back-link"><a href="{{ url_for('project.project', id=task.projectID) }}">&larr; Back to project</a></p>
+{% endif %}
+
+{% endblock %}
