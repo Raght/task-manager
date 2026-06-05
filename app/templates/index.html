@@ -6,9 +6,44 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Home</h2>
+    <h1>Home</h1>
     <hr>
     
-    
+    <div class="tasks-list">
+        <h3>Due Tasks</h3>
+        {% if tasks %}
+            <div class="item-list">
+                {% for task in tasks %}
+                <a class="item-row task-row" href="{{ url_for('task.task', id=task.id) }}">
+                    <span class="item-id">#{{ task.id }}</span>
+                    <span class="item-main">{{ task.name }}</span>
+                    <span class="item-meta">
+                        {% if task.deadline %}Due: {{ task.deadline.strftime('%d.%m.%Y') }}{% else %}Due: —{% endif %}
+                    </span>
+                    <span class="item-meta">
+                        Priority: {% if task.priority %}{{ task.priority.name.replace('_', ' ') }}{% else %}—{% endif %}
+                    </span>
+                    <span class="item-meta">
+                        Status: {% if task.status %}{{ task.status.name.replace('_', ' ') }}{% else %}—{% endif %}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('task.tasks') }}">View all tasks...</a>
+        {% else %}
+            <p class="empty-msg">No tasks due soon. Great job!</p>
+        {% endif %}
+    </div>
+
+    <div class="projects-list">
+        <h3>My Projects</h3>
+        {% if projects %}
+            {% for project in projects %}
+                <a href="{{ url_for('project.project', id=project.id) }}">{{ project.name }}</a>
+            {% endfor %}
+        {% else %}
+            <p>You are not part of any projects yet. Join or create a project to get started!</p>
+        {% endif %}
+    </div>
 
 {% endblock %}

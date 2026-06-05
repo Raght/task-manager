@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash
 from flask_login import login_required, current_user
 
 from .config import Config
@@ -10,6 +10,8 @@ from .routes.auth.auth import auth_bp
 from .routes.tasks.tasks import task_bp
 from .routes.projects.projects import project_bp
 
+from .services.ProjectService import ProjectService
+from .services.TaskService import TaskService
 
 def create_app():
     static_dir = 'static'
@@ -31,10 +33,23 @@ def create_app():
     app.register_blueprint(task_bp, url_prefix='/tasks')
     app.register_blueprint(project_bp, url_prefix='/projects')
 
+    print(app.config['HOME_PAGE_DUE_TASKS_AMOUNT'])
 
     @app.route('/')
     def index():
-        return render_template('index.html')
+        try:
+            projects = ProjectService.get_projects(current_user.id)
+            tasks = TaskService.get_tasks_assigned_to_user(current_user.id)
+            n = app.config['HOME_PAGE_DUE_TASKS_AMOUNT']
+            tasks = TaskService.sort_tasks(tasks, 'due')[:n]
+        except ValueError as e:
+            flash(f'Error occured in {__name__}: {e}')
+        
+        return render_template(
+            'index.html',
+            tasks=tasks,
+            projects=projects
+        )
 
     @app.errorhandler(404)
     def not_found(e):
