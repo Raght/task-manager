@@ -33,8 +33,7 @@ def create_app():
     app.register_blueprint(task_bp, url_prefix='/tasks')
     app.register_blueprint(project_bp, url_prefix='/projects')
 
-    print(app.config['HOME_PAGE_DUE_TASKS_AMOUNT'])
-
+    
     @app.route('/')
     def index():
         try:
