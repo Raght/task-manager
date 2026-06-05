@@ -36,13 +36,18 @@ def create_app():
     
     @app.route('/')
     def index():
+        if not current_user.is_authenticated:
+            return render_template('index.html')
+        
         try:
             projects = ProjectService.get_projects(current_user.id)
             tasks = TaskService.get_tasks_assigned_to_user(current_user.id)
             n = app.config['HOME_PAGE_DUE_TASKS_AMOUNT']
             tasks = TaskService.sort_tasks(tasks, 'due')[:n]
-        except ValueError as e:
+        except Exception as e:
             flash(f'Error occured in {__name__}: {e}')
+            print(f'Error occured in {__name__}: {e}')
+            return render_template('index.html')
         
         return render_template(
             'index.html',
