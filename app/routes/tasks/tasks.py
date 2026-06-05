@@ -9,14 +9,23 @@ task_bp = Blueprint('task', __name__, static_folder='../../static', template_fol
 @task_bp.route('/')
 @login_required
 def tasks():
+    sort = request.args.get('sort', 'id')
+    order = request.args.get('order', 'asc')
     try:
         tasks = TaskService.get_tasks_assigned_to_user(current_user.id)
+        sorted_tasks = TaskService.sort_tasks(tasks, sort, order)
     except ValueError as e:
         print(f'ValueError in {__name__}: {e}')
         flash('Server error.', category='error')
         tasks = []
 
-    return render_template('tasks.html', tasks=tasks)
+    return render_template(
+        'tasks.html', 
+        tasks=sorted_tasks,
+        sort=sort,
+        order=order,
+        sorts=TaskService.get_available_sorts()
+    )
 
 
 @task_bp.route('/<int:id>', methods=['GET', 'POST'])

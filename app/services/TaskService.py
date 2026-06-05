@@ -4,6 +4,7 @@ from ..extensions import db
 from ..model.Tasks import Task
 from ..model.Users import Users
 from ..model.Enums import TaskStatus, TaskPriority
+from .TaskSortStrategy import SORT_STRATEGIES
 
 
 class TaskService():
@@ -127,6 +128,19 @@ class TaskService():
         task.assignedTo = user_id
         db.session.commit()
         return task
+    
+    @staticmethod
+    def sort_tasks(tasks, sort='id', order='asc'):
+        strategy = SORT_STRATEGIES.get(sort)
+        if strategy is None:
+            raise ValueError(f"Invalid sort key: {sort}")
+        if order not in ('asc', 'desc'):
+            raise ValueError(f"Invalid sort order: {order}")
+        return strategy.apply(list(tasks), reverse=(order == 'desc'))
+    
+    @staticmethod
+    def get_available_sorts():
+        return list(SORT_STRATEGIES.keys())
 
     @staticmethod
     def filter_tasks(filters=None):
