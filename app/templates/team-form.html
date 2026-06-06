@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>New Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/team-form.css')}}">
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('project.project', id=project_id) }}">&lt; Go Back to Project</a>
+
+<h2>Create Team</h2>
+
+<form class="form" method="post" action="{{ url_for('project.new_team', id=project_id) }}">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+
+    <button type="submit">Create</button>
+    <a class="cancel-link" href="{{ url_for('project.project', id=project_id) }}">Cancel</a>
+</form>
+
+{% endblock %}

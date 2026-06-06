@@ -1,3 +1,6 @@
+* {
+    box-sizing: content-box;
+}
 
 .navbar {
     background-color: #333;
@@ -87,6 +90,17 @@
 }
 
 .btn-view-all {
-    color:blue;
+    color: blue;
     margin-top: 1rem;
+}
+
+.horizontal-layout {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+}
+
+.horizontal-layout > *:nth-child(-n+1) {
+    margin-right: 12px;
 }

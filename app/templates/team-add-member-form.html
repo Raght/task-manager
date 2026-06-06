@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>New Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/team-form.css')}}">
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('project.project', id=project_id) }}">&lt; Go Back to Project</a>
+
+<h2>Add Member to {{ team.name }}</h2>
+
+<form class="form" method="post" action="{{ url_for('project.add_member', id=project_id) }}">
+    <div class="horizontal-layout">
+        <label for="user">User: </label>
+        <select id="user" name="user_id" required>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit">Add</button>
+    <a class="cancel-link" href="{{ url_for('project.project', id=project_id) }}">Cancel</a>
+</form>
+
+{% endblock %}

@@ -38,6 +38,16 @@
         {% endfor %}
     </select>
 
+    <label for="assigned-member">Assigned member</label>
+    <select id="assigned-member" name="assignedTo">
+        <option value="">[none]</option>
+        {% for m in members %}
+        <option value="{{ m.id }}" {% if m.id == task.assignedTo %}selected{% endif %}>
+            {{ m.name }}
+        </option>
+        {% endfor %}
+    </select>
+
     <button type="submit">Save</button>
 </form>
 {% else %}
@@ -47,6 +57,7 @@
     <p><strong>Deadline:</strong> {% if task.deadline %}{{ task.deadline.strftime('%d.%m.%Y') }}{% else %}—{% endif %}</p>
     <p><strong>Priority:</strong> {% if task.priority %}{{ task.priority.name.replace('_', ' ') }}{% else %}—{% endif %}</p>
     <p><strong>Status:</strong> {% if task.status %}{{ task.status.name.replace('_', ' ') }}{% else %}—{% endif %}</p>
+    <p><strong>Assigned Member:</strong> {% if task.assignedTo %}User with id {{ task.assignedTo }}{% else %}—{% endif %}</p>
     <p><a href="{{ url_for('auth.login') }}">Log in</a> to edit this task.</p>
 </div>
 {% endif %}

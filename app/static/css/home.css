@@ -1,1 +1,9 @@
+.tasks-list {
+    display: flex;
+    flex-direction: column;
+}
 
+.projects-list {
+    display: flex;
+    flex-direction: column;
+}

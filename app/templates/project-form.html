@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>New Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/project.css')}}">
+{% endblock %}
+
+{% if project %}
+{% set title = "Edit Project" %}
+{% set form_action_url = url_for('project.edit', id=project.id) %}
+{% set name = project.name %}
+{% set description = project.description %}
+{% set status = project.status %}
+{% set button_name = "Submit" %}
+{% set cancel_url = url_for('project.project', id=project.id) %}
+{% else %}
+{% set title = "Create New Project" %}
+{% set form_action_url = url_for('project.new') %}
+{% set name = "" %}
+{% set description = "" %}
+{% set status = "" %}
+{% set button_name = "Create" %}
+{% set cancel_url = url_for('project.projects') %}
+{% endif %}
+
+
+
+{% block content %}
+{% if project %}
+<a href="{{ url_for('project.project', id=project.id) }}">&lt; Go Back to Project</a>
+{% endif %}
+
+<h2>{{ title }}</h2>
+
+<form class="form" method="post" action="{{ form_action_url }}">
+    {% if project %}
+    <input type="hidden" id="id" name="id" value="{{ project.id }}" />
+    {% endif %}
+
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required value="{{ name }}">
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="6">{{ description }}</textarea>
+
+    <label for="status">Status</label>
+    <select id="status" name="status">
+        {% for s in statuses %}
+            {% if s.name == status.name %}
+            {% set selected = "selected" %}
+            {% else %}
+            {% set selected = "" %}
+            {% endif %}
+            <option value="{{ s.name }}" {{ selected }}>{{ s.name.replace('_', ' ') }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">{{ button_name }}</button>
+    <a class="cancel-link" href="{{ cancel_url }}">Cancel</a>
+</form>
+{% endblock %}

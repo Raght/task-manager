@@ -13,7 +13,17 @@
     padding: 8px 16px;
     border: 1px solid #333;
     background: #f0f0f0;
-    cursor: default;
+
+    color: #000000;
+    text-decoration: none;
+}
+
+.project-description {
+    margin-bottom: 1rem;
+}
+
+.project-status {
+    margin-bottom: 1rem;
 }
 
 .project-tabs {

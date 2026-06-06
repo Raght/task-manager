@@ -1,7 +1,9 @@
+import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 
 from ...services.TaskService import TaskService
+from ...services.TeamService import TeamService
 
 task_bp = Blueprint('task', __name__, static_folder='../../static', template_folder='../../templates')
 
@@ -19,9 +21,19 @@ def tasks():
         flash('Server error.', category='error')
         tasks = []
 
+    datetime_now = datetime.datetime.now()
+    upcoming_tasks = []
+    overdue_tasks = []
+    for task in tasks:
+        if datetime_now <= task.deadline:
+            upcoming_tasks.append(task)
+        else:
+            overdue_tasks.append(task)
+
     return render_template(
         'tasks.html', 
-        tasks=sorted_tasks,
+        upcoming_tasks=upcoming_tasks,
+        overdue_tasks=overdue_tasks,
         sort=sort,
         order=order,
         sorts=TaskService.get_available_sorts()
@@ -32,6 +44,7 @@ def tasks():
 def task(id):
     try:
         task = TaskService.get_task(id)
+        assignedTo = task.assignedTo
     except ValueError:
         flash('Task not found', category='error')
         return redirect(url_for('task.tasks'))
@@ -49,12 +62,17 @@ def task(id):
             data = TaskService.build_update_data(request.form)
             task = TaskService.update_task(id, data)
             flash('Task updated.', category='success')
+            return redirect(url_for('project.project', id=id))
         except ValueError as e:
             flash(str(e), category='error')
+            return redirect(url_for('project.project', id=id))
+
+    members = TeamService.get_project_members(id)
 
     return render_template(
         'task.html',
         task=task,
+        members=members,
         statuses=TaskService.get_all_statuses(),
         priorities=TaskService.get_all_priorities(),
     )

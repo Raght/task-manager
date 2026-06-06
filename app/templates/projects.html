@@ -7,10 +7,14 @@
 
 {% block content %}
 
-<h2>Projects</h2>
-{% if projects %}
-    <div id="projects">
-        {% for project in projects %}
+<div class="horizontal-layout">
+    <h2>Your Projects</h2>
+    <a href="{{ url_for('project.new') }}">+ Add</a>
+</div>
+
+{% if user_projects %}
+    <div id="user_projects">
+        {% for project in user_projects %}
         <div class="project">
             <a href="{{ url_for('project.project', id=project.id) }}">{{ project.name }}</a>
         </div>
@@ -19,5 +23,20 @@
 {% else %}
     <p>No projects found. Start by creating a new project!</p>
 {% endif %}
+
+<h2>Participating Projects</h2>
+
+{% if participating_projects %}
+    <div id="participating_projects">
+        {% for project in participating_projects %}
+        <div class="project">
+            <a href="{{ url_for('project.project', id=project.id) }}">{{ project.name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No projects found.</p>
+{% endif %}
+
 
 {% endblock %}
