@@ -7,17 +7,17 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Tasks</h2>
+    <h2>Upcoming Tasks</h2>
     
-    {% if tasks %}
+    {% if upcoming_tasks %}
     <div class="tasks-list">
         <div class="tab-toolbar">
             <div class="sort-bar">
                 {% for key in sorts %}
-                {% if sort == key %}
-                    {% set link_order = 'desc' if order == 'asc' else 'asc' %}
-                {% else %}
-                    {% set link_order = 'asc' %}
+                    {% if sort == key %}
+                        {% set link_order = 'desc' if order == 'asc' else 'asc' %}
+                    {% else %}
+                        {% set link_order = 'asc' %}
                 {% endif %}
                 <a href="{{ url_for('task.tasks', sort=key, order=link_order) }}"
                    class="{% if sort == key %}active{% endif %}">
@@ -31,30 +31,71 @@
             </div>
         </div>
 
-        {% if tasks %}
-            <div class="item-list">
-                {% for task in tasks %}
-                <a class="item-row task-row" href="{{ url_for('task.task', id=task.id) }}">
-                    <span class="item-id">#{{ task.id }}</span>
-                    <span class="item-main">{{ task.name }}</span>
-                    <span class="item-meta">
-                        {% if task.deadline %}Due: {{ task.deadline.strftime('%d.%m.%Y') }}{% else %}Due: —{% endif %}
-                    </span>
-                    <span class="item-meta">
-                        Priority: {% if task.priority %}{{ task.priority.name.replace('_', ' ') }}{% else %}—{% endif %}
-                    </span>
-                    <span class="item-meta">
-                        Status: {% if task.status %}{{ task.status.name.replace('_', ' ') }}{% else %}—{% endif %}
-                    </span>
-                </a>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="empty-msg">No tasks in this project yet.</p>
-        {% endif %}
+        <div class="item-list">
+            {% for task in upcoming_tasks %}
+            <a class="item-row task-row" href="{{ url_for('task.task', id=task.id) }}">
+                <span class="item-id">#{{ task.id }}</span>
+                <span class="item-main">{{ task.name }}</span>
+                <span class="item-meta">
+                    {% if task.deadline %}Due: {{ task.deadline.strftime('%d.%m.%Y') }}{% else %}Due: —{% endif %}
+                </span>
+                <span class="item-meta">
+                    Priority: {% if task.priority %}{{ task.priority.name.replace('_', ' ') }}{% else %}—{% endif %}
+                </span>
+                <span class="item-meta">
+                    Status: {% if task.status %}{{ task.status.name.replace('_', ' ') }}{% else %}—{% endif %}
+                </span>
+            </a>
+            {% endfor %}
+        </div>
     </div>
     {% else %}
-        <p>No tasks found. Start by creating a new task!</p>
+        <p>No tasks found.</p>
+    {% endif %}
+
+    <h2>Overdue Tasks</h2>
+    {% if overdue_tasks %}
+    <div class="tasks-list">
+        <div class="tab-toolbar">
+            <div class="sort-bar">
+                {% for key in sorts %}
+                    {% if sort == key %}
+                        {% set link_order = 'desc' if order == 'asc' else 'asc' %}
+                    {% else %}
+                        {% set link_order = 'asc' %}
+                {% endif %}
+                <a href="{{ url_for('task.tasks', sort=key, order=link_order) }}"
+                   class="{% if sort == key %}active{% endif %}">
+                    {% if key == 'id' %}ID{% elif key == 'due' %}Due{% elif key == 'priority' %}Priority{% else %}Status{% endif %}
+                    {% if sort == key %}
+                        {% if order == 'asc' %}&uarr;{% else %}&darr;{% endif %}
+                    {% endif %}
+                </a>
+                {% if not loop.last %}<span class="sort-sep">|</span>{% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="item-list">
+            {% for task in overdue_tasks %}
+            <a class="item-row task-row" href="{{ url_for('task.task', id=task.id) }}">
+                <span class="item-id">#{{ task.id }}</span>
+                <span class="item-main">{{ task.name }}</span>
+                <span class="item-meta">
+                    {% if task.deadline %}Due: {{ task.deadline.strftime('%d.%m.%Y') }}{% else %}Due: —{% endif %}
+                </span>
+                <span class="item-meta">
+                    Priority: {% if task.priority %}{{ task.priority.name.replace('_', ' ') }}{% else %}—{% endif %}
+                </span>
+                <span class="item-meta">
+                    Status: {% if task.status %}{{ task.status.name.replace('_', ' ') }}{% else %}—{% endif %}
+                </span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+        <p>No tasks.</p>
     {% endif %}
 
 {% endblock %}

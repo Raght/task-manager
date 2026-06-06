@@ -8,9 +8,9 @@
 {% block content %}
     <h1>Home</h1>
     <hr>
-    
+
+    <h3>Due Tasks</h3>
     <div class="tasks-list">
-        <h3>Due Tasks</h3>
         {% if tasks %}
             <div class="item-list">
                 {% for task in tasks %}
@@ -35,8 +35,8 @@
         {% endif %}
     </div>
 
+    <h3>My Projects</h3>
     <div class="projects-list">
-        <h3>My Projects</h3>
         {% if projects %}
             {% for project in projects %}
                 <a href="{{ url_for('project.project', id=project.id) }}">{{ project.name }}</a>

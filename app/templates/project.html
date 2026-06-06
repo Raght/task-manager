@@ -8,8 +8,19 @@
 {% block content %}
 
 <div class="project-header">
-    <h1>&ldquo;{{ project.name }}&rdquo;</h1>
-    <span class="btn-edit">Edit</span>
+    <h1>{{ project.name }}</h1>
+    <a class="btn-edit" href="{{ url_for('project.edit', id=project.id) }}">Edit</a>
+</div>
+
+<div class="project-description">
+    <details>
+        <summary>View description</summary>
+        <p>{{ project.description }}</p>
+    </details>
+</div>
+
+<div class="project-status">
+    <p>Status: {{ project.status.name.replace('_', ' ') }}</p>
 </div>
 
 <div class="project-tabs">
@@ -67,7 +78,23 @@
 </div>
 
 <div class="tab team-tab">
-    {% if members %}
+    {% if teams %}
+    <h4>{{ teams[0].name }}</h4>
+    <div class="item-list">
+        {% for member in team_members %}
+        <a class="item-row member-row" href="{{ url_for('auth.profile', user_id=member.id) }}">
+            <span class="item-id">#{{ member.id }}</span>
+            <span class="item-main">{{ member.name }} | {{ member.email }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('project.add_member', id=project.id) }}">Add Member</a>
+    {% else %}
+    <p class="emtpy-msg">No teams for this project.</p>
+    <a href="{{ url_for('project.new_team', id=project.id) }}">Create Team</a>
+    {% endif %}
+
+    {# {% if members %}
         <div class="item-list">
             {% for member in members %}
             <a class="item-row member-row" href="{{ url_for('auth.profile', user_id=member.id) }}">
@@ -78,7 +105,7 @@
         </div>
     {% else %}
         <p class="empty-msg">No team members for this project.</p>
-    {% endif %}
+    {% endif %} #}
 </div>
 </div>
 

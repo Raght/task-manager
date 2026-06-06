@@ -205,6 +205,7 @@ class TaskService():
             'description': form_data.get('description'),
             'status': form_data.get('status'),
             'priority': form_data.get('priority'),
+            'assignedTo': form_data.get('assignedTo') if form_data.get('assignedTo') != '' else None
         }
         if 'deadline' in form_data:
             data['deadline'] = TaskService.parse_deadline(form_data.get('deadline'))
